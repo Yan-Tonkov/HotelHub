@@ -1,0 +1,12 @@
+body {
+    font-family: Arial;
+    background: #f5f5f5;
+    padding: 40px;
+}
+
+.hotel-card {
+    background: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+}
