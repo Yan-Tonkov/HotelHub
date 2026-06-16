@@ -1,8 +1,71 @@
+# =========================
+# Python
+# =========================
 __pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.pkl
 
+.Python
+env/
+venv/
+ENV/
+.venv/
 
+pip-log.txt
+pip-delete-this-directory.txt
+
+# =========================
+# Django
+# =========================
+*.log
+local_settings.py
 db.sqlite3
+db.sqlite3-journal
 
+media/
+
+# migrations (НЕ всегда игнорируют, но иногда в MVP)
+# migrations/__pycache__/
+
+# =========================
+# Environment variables
+# =========================
 .env
+.env.local
+.env.*.local
 
-# PyCharm
+# =========================
+# IDE / Editors
+# =========================
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# =========================
+# OS files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Testing / Coverage
+# =========================
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+
+# =========================
+# Static files (optional)
+# =========================
+staticfiles/
+collected_static/
+
+# =========================
+# Django secret key backup files
+# =========================
+secret_key.txt
