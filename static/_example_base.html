@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}HotelHub{% endblock %}</title>
+
+    {# Глобальные стили проекта #}
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+
+    {# Стили конкретной страницы — добавляются в дочерних шаблонах #}
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="container">
+            <a href="/" class="logo">HotelHub</a>
+            <nav>
+                <a href="/hotels/">Отели</a>
+                <a href="/admin/">Админка</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container" style="padding-top: 30px; padding-bottom: 30px;">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            HotelHub — учебный проект
+        </div>
+    </footer>
+
+    {# Глобальный скрипт проекта #}
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

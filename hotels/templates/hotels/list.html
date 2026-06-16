@@ -1,79 +1,48 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Отели</title>
+    <title>HotelHub — поиск отелей</title>
     <link rel="stylesheet" href="{% static 'hotels/css/style.css' %}">
 </head>
 <body>
+    <header class="header">
+        <h1>HotelHub</h1>
+        <p>Поиск и бронирование отелей</p>
+    </header>
 
-<div class="container">
-    <div class="header">
-        <h1>Отели</h1>
-        <p>Найди лучший отель в городе</p>
-    </div>
-
-     <form method="get" class="search-form">
-        <input
+    <main class="container">
+        <form method="get" class="search-form">
+            <input
                 type="text"
                 name="city"
-                placeholder="Искать город..."
-                <!-- сохраняем значение -->
-                value="{{ request.GET.city }}"
-                >
-        <button type="submit">Найти</button>
-    </form>
+                value="{{ city }}"
+                placeholder="Введите город, например Астана"
+                class="search-input">
+            <button type="submit" class="search-btn">Искать</button>
+        </form>
 
-    {% if hotels %}
-
-    <div class="hotel-grid">
-        {% for hotel in hotels %}
-        <div class="hotel-card">
-
-            <h2 class="hotel-name">
-                {{ hotel.name }}
-            </h2>
-
-            <p class="hotel-city">
-                {{ hotel.city }}
-            </p>
-
-            {% if hotel.description %}
-
-                <p style="margin-bottom: 20px; color: #555;">
-                    {{ hotel.description|truncatechars:120 }}
-                </p>
-            {% endif %}
-
-            <div class="hotel-info">
-
-                <div class="price">
-                    ${{ hotel.price }}
-                </div>
-
-                <div class="rating">
-                    {{ hotel.rating }}
-                </div>
-
+        {% if hotels %}
+            <div class="hotel-grid">
+                {% for hotel in hotels %}
+                    <article class="hotel-card">
+                        <h2 class="hotel-name">{{ hotel.name }}</h2>
+                        <p class="hotel-city">{{ hotel.city }}, {{ hotel.address }}</p>
+                        {% if hotel.description %}
+                            <p class="hotel-desc">{{ hotel.description }}</p>
+                        {% endif %}
+                        <div class="hotel-meta">
+                            <span class="hotel-price">{{ hotel.price }} ₸ / ночь</span>
+                            <span class="hotel-rating">★ {{ hotel.rating }}</span>
+                        </div>
+                    </article>
+                {% endfor %}
             </div>
-
-        </div>
-        {% endfor %}
-
-    </div>
-    {% else %}
-
-        <div class="empty">
-
-            <h2>Отели не найдены</h2>
-            <p>Попробуйте изменить свой поисковой запрос</p>
-
-        </div>
-
-    {% endif %}
-
-</div>
-
+        {% else %}
+            <p class="empty">Отели не найдены. Попробуйте изменить запрос.</p>
+        {% endif %}
+    </main>
 </body>
 </html>

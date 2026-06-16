@@ -1,12 +1,123 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
-    font-family: Arial;
-    background: #f5f5f5;
-    padding: 40px;
+    font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    background: #f5f5f4;
+    color: #1a1a1a;
+    line-height: 1.6;
+}
+
+.header {
+    background: #185fa5;
+    color: #fff;
+    padding: 32px 24px;
+    text-align: center;
+}
+
+.header h1 {
+    font-size: 28px;
+    font-weight: 600;
+}
+
+.header p {
+    opacity: 0.85;
+    font-size: 15px;
+}
+
+.container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 32px 24px;
+}
+
+.search-form {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 28px;
+}
+
+.search-input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 1px solid #d8d6cf;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #185fa5;
+}
+
+.search-btn {
+    padding: 12px 24px;
+    background: #185fa5;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.search-btn:hover {
+    background: #0c447c;
+}
+
+.hotel-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
 }
 
 .hotel-card {
-    background: white;
+    background: #fff;
+    border: 1px solid #e5e3dc;
+    border-radius: 12px;
     padding: 20px;
-    margin-bottom: 20px;
-    border-radius: 10px;
+}
+
+.hotel-name {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.hotel-city {
+    color: #5f5e5a;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.hotel-desc {
+    font-size: 14px;
+    color: #444441;
+    margin-bottom: 12px;
+}
+
+.hotel-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #f0eee8;
+    padding-top: 12px;
+}
+
+.hotel-price {
+    font-weight: 600;
+    color: #185fa5;
+}
+
+.hotel-rating {
+    color: #ba7517;
+    font-size: 14px;
+}
+
+.empty {
+    text-align: center;
+    color: #5f5e5a;
+    padding: 48px 0;
 }
