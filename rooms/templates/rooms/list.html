@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}HotelHub — номера{% endblock %}
+
+{% block body_class %}theme-rooms{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'rooms/css/style.css' %}">
+{% endblock %}
+
+{% block page_title %}Номера{% endblock %}
+{% block page_subtitle %}Выбор номеров в отелях HotelHub{% endblock %}
+
+{% block content %}
+    <form method="get" class="search-form">
+        <input
+            type="text"
+            name="q"
+            value="{{ query }}"
+            placeholder="Поиск по типу номера или отелю"
+            class="search-input">
+
+        <div class="input-group">
+            <label for="{{ form.check_in.id_for_label }}">{{ form.check_in.label }}</label>
+            {{ form.check_in }}
+        </div>
+        <div class="input-group">
+            <label for="{{ form.check_out.id_for_label }}">{{ form.check_out.label }}</label>
+            {{ form.check_out }}
+        </div>
+        <div class="input-group">
+            <label for="{{ form.sort_by.id_for_label }}">{{ form.sort_by.label }}</label>
+            {{ form.sort_by }}
+        </div>
+
+        <button type="submit" class="search-btn">Искать</button>
+    </form>
+
+    {% for error in form.non_field_errors %}
+        <p class="form-error">{{ error }}</p>
+    {% endfor %}
+
+    {% if rooms %}
+        <div class="card-grid">
+            {% for room in rooms %}
+                {% include "rooms/_card.html" with room=room %}
+            {% endfor %}
+        </div>
+
+        {% comment %} Пагинация с сохранением текущих GET-параметров поиска (дат,
+           сортировки, q). {% querystring %} — встроенный тег Django (доступен
+           начиная с Django 5.1): сам подставляет/заменяет параметр page= в
+           текущих GET-параметрах и уже включает ведущий "?" сам по себе —
+           добавлять его вручную перед тегом не нужно (иначе в ссылке
+           получится "??...", что и было здесь до правки). Без этого тега
+           пришлось бы вручную склеивать "?{{ request.GET.urlencode }}&page=N",
+           что при уже существующем в адресе ?page= создавало бы два
+           параметра page одновременно. {% endcomment %}
+        {% if is_paginated %}
+            <div class="pagination flex-center">
+                {% if page_obj.has_previous %}
+                    <a href="{% querystring page=page_obj.previous_page_number %}">« Назад</a>
+                {% endif %}
+
+                <span class="current-page">
+                    Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="{% querystring page=page_obj.next_page_number %}">Вперёд »</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    {% else %}
+        <p class="empty">Номера не найдены. Попробуйте изменить запрос или даты.</p>
+    {% endif %}
+{% endblock %}

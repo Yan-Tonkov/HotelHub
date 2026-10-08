@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}HotelHub{% endblock %}</title>
+
+    {# Глобальные стили проекта: переменные, сетка, карточки, формы, кнопки #}
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+
+    {# Стили конкретного приложения — подключаются в дочерних шаблонах #}
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+
+    {% block header %}
+        {% include "includes/navbar.html" %}
+    {% endblock %}
+
+    {% block page_header %}
+        <section class="page-header">
+            <div class="container">
+                <h1>{% block page_title %}HotelHub{% endblock %}</h1>
+                <p>{% block page_subtitle %}{% endblock %}</p>
+            </div>
+        </section>
+    {% endblock %}
+
+    <main class="container content">
+        {# Всплывающие сообщения Django (успех входа, ошибки и т.п.) #}
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="message message-{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    {% block footer %}
+        {% include "includes/footer.html" %}
+    {% endblock %}
+
+    {# Глобальный скрипт проекта #}
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

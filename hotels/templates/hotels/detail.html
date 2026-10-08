@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% load static %}
+{% block title %}{{ hotel.name }} — HotelHub{% endblock %}
+{% block body_class %}theme-hotels{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'hotels/css/style.css' %}">{% endblock %}
+{% block page_title %}{{ hotel.name }}{% endblock %}
+{% block page_subtitle %}{{ hotel.city }}, {{ hotel.address }}{% endblock %}
+
+{% block content %}
+<div class="detail">
+    <div class="card-image detail-image">
+        {% if hotel.cover %}
+            <img src="{{ hotel.cover.url }}" alt="{{ hotel.name }}" onerror="this.onerror=null;this.src='{% static 'img/no-photo.svg' %}';">
+        {% else %}
+            <img src="{% static 'img/no-photo.svg' %}" alt="Фото пока нет">
+        {% endif %}
+    </div>
+
+    <div class="detail-meta">
+        {% comment %}
+        min_price — см. hotels/_card.html: агрегат по ценам номеров
+        (аудит, дефект №14), а не отдельное поле Hotel.price.
+        {% endcomment %}
+        {% if hotel.min_price %}
+            <span class="price">от {{ hotel.min_price|intcomma }} ₸ / ночь</span>
+        {% else %}
+            <span class="price">{{ hotel.price|intcomma }} ₸ / ночь</span>
+        {% endif %}
+        <span class="rating">★ {{ hotel.rating|floatformat:1 }}</span>
+    </div>
+
+    {% if hotel.description %}
+        <p class="detail-desc">{{ hotel.description }}</p>
+    {% endif %}
+
+    <h2 class="detail-heading">Номера этого отеля</h2>
+    {% if rooms %}
+        <div class="card-grid">
+            {% for room in rooms %}
+                {% include "rooms/_card.html" with room=room %}
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="empty">Свободных номеров сейчас нет.</p>
+    {% endif %}
+
+    <p class="back-link"><a href="{% url 'hotels:hotel_list' %}">← Ко всем отелям</a></p>
+</div>
+{% endblock %}

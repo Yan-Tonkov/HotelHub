@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block title %}Бронирование — HotelHub{% endblock %}
+{% block page_title %}Бронирование номера{% endblock %}
+{% block page_subtitle %}{{ room.hotel.name }} · номер {{ room.number }}{% endblock %}
+
+{% block content %}
+<div class="form-card">
+    <div class="booking-summary">
+        <b>{{ room.get_room_type_display }}</b> в отеле «{{ room.hotel.name }}»<br>
+        <span class="price">{{ room.price_per_night|intcomma }} ₸ / ночь</span> · до {{ room.capacity }} гостей
+    </div>
+
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {{ form.room }}  {# скрытое поле с номером #}
+
+        <div class="form-row">
+            <label for="{{ form.check_in.id_for_label }}">Дата заезда</label>
+            {{ form.check_in }}
+        </div>
+        <div class="form-row">
+            <label for="{{ form.check_out.id_for_label }}">Дата выезда</label>
+            {{ form.check_out }}
+        </div>
+        <div class="form-row">
+            <label for="{{ form.guests.id_for_label }}">Гостей</label>
+            {{ form.guests }}
+        </div>
+
+        {% for error in form.non_field_errors %}
+            <p class="form-error">{{ error }}</p>
+        {% endfor %}
+
+        <button type="submit" class="btn">Забронировать</button>
+    </form>
+</div>
+{% endblock %}

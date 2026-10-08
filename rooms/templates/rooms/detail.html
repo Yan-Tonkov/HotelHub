@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% load static %}
+{% block title %}Номер {{ room.number }} — HotelHub{% endblock %}
+{% block body_class %}theme-rooms{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'rooms/css/style.css' %}">{% endblock %}
+{% block page_title %}Номер {{ room.number }}{% endblock %}
+{% block page_subtitle %}{{ room.hotel.name }}, {{ room.hotel.city }}{% endblock %}
+
+{% block content %}
+<div class="detail">
+    <div class="card-image detail-image">
+        {% if room.image %}
+            <img src="{{ room.image.url }}" alt="Номер {{ room.number }}" onerror="this.onerror=null;this.src='{% static 'img/no-photo.svg' %}';">
+        {% else %}
+            <img src="{% static 'img/no-photo.svg' %}" alt="Фото пока нет">
+        {% endif %}
+    </div>
+
+    <div class="card-head">
+        <h2 class="detail-heading">{{ room.get_room_type_display }}</h2>
+        {% comment %}
+        occupied_today — см. rooms/_card.html: реальная занятость на
+        сегодня, а не статичный флаг is_available (аудит, дефект №4).
+        {% endcomment %}
+        {% if room.occupied_today %}
+            <span class="badge badge-danger">Занят сегодня</span>
+        {% else %}
+            <span class="badge badge-success">Свободен</span>
+        {% endif %}
+    </div>
+
+    <p class="card-subtitle">До {{ room.capacity }} гостей</p>
+
+    {% if room.description %}
+        <p class="detail-desc">{{ room.description }}</p>
+    {% endif %}
+
+    <div class="detail-meta">
+        <span class="price">{{ room.price_per_night|intcomma }} ₸ / ночь</span>
+    </div>
+
+    {% comment %}
+    Кнопка брони зависит от is_available («в продаже»), а не от
+    occupied_today: номер, занятый сегодня, всё равно можно
+    забронировать на другие, свободные даты — форма бронирования
+    и сервисный слой (services.create_booking) сами проверят
+    конкретный выбранный интервал.
+    {% endcomment %}
+    {% if room.is_available %}
+        {% if user.is_authenticated %}
+            <a href="{% url 'bookings:create' room.id %}" class="btn">Забронировать</a>
+        {% else %}
+            {# Гостю сначала предлагаем войти, затем вернём к бронированию #}
+            <a href="{% url 'users:login' %}?next={% url 'bookings:create' room.id %}" class="btn">
+                Войдите, чтобы забронировать
+            </a>
+        {% endif %}
+    {% endif %}
+
+    <p class="back-link"><a href="{% url 'rooms:room_list' %}">← Ко всем номерам</a></p>
+</div>
+{% endblock %}

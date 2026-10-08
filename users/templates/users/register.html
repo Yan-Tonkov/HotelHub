@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Регистрация — HotelHub{% endblock %}
+{% block page_title %}Создать аккаунт{% endblock %}
+{% block page_subtitle %}Зарегистрируйтесь, чтобы бронировать номера{% endblock %}
+
+{% block content %}
+<div class="form-card">
+    {% comment %} novalidate убирает встроенную браузерную проверку, чтобы показывать
+       единообразные ошибки от Django. method="post" — данные уходят скрытно. {% endcomment %}
+    <form method="post" novalidate>
+        {% csrf_token %}  {# защита от CSRF — обязательна для всех POST-форм #}
+
+        {% for field in form %}
+            <div class="form-row">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}
+                    <small class="form-hint">{{ field.help_text|safe }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                    <small class="form-error">{{ error }}</small>
+                {% endfor %}
+            </div>
+        {% endfor %}
+
+        <button type="submit" class="btn">Зарегистрироваться</button>
+    </form>
+
+    <p class="form-alt">
+        Уже есть аккаунт? <a href="{% url 'users:login' %}">Войти</a>
+    </p>
+</div>
+{% endblock %}

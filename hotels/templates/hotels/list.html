@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}HotelHub — поиск отелей{% endblock %}
+
+{% block body_class %}theme-hotels{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'hotels/css/style.css' %}">
+{% endblock %}
+
+{% block page_title %}HotelHub{% endblock %}
+{% block page_subtitle %}Поиск и бронирование отелей{% endblock %}
+
+{% block content %}
+    <form method="get" class="search-form">
+        <input
+            type="text"
+            name="city"
+            value="{{ city }}"
+            placeholder="Введите город, например Астана"
+            class="search-input">
+
+        <div class="input-group">
+            <label for="sort">Сортировка</label>
+            <select name="sort" id="sort">
+                <option value="-rating" {% if sort == '-rating' or not sort %}selected{% endif %}>Сначала по рейтингу</option>
+                <option value="price" {% if sort == 'price' %}selected{% endif %}>Сначала дешевле</option>
+                <option value="-price" {% if sort == '-price' %}selected{% endif %}>Сначала дороже</option>
+            </select>
+        </div>
+
+        <button type="submit" class="search-btn">Искать</button>
+    </form>
+
+    <p class="hotels-toolbar">
+        {% comment %} Экспорт открыт всем — это просто выгрузка публичного каталога,
+           в четырёх форматах на выбор (см. hotels/exports.py). {% endcomment %}
+        <a href="{% url 'hotels:export_csv' %}" class="btn btn-outline">⬇ CSV</a>
+        <a href="{% url 'hotels:export_xlsx' %}" class="btn btn-outline">⬇ Excel</a>
+        <a href="{% url 'hotels:export_pdf' %}" class="btn btn-outline">⬇ PDF</a>
+        <a href="{% url 'hotels:export_docx' %}" class="btn btn-outline">⬇ Word</a>
+        {# Импорт виден и доступен только персоналу (permission_required во view). #}
+        {% if request.user.is_staff %}
+            <a href="{% url 'hotels:import_hotels' %}" class="btn btn-outline">⬆ Импорт CSV/Excel</a>
+        {% endif %}
+    </p>
+
+    {% if hotels %}
+        <div class="card-grid">
+            {% for hotel in hotels %}
+                {% include "hotels/_card.html" with hotel=hotel %}
+            {% endfor %}
+        </div>
+
+        {% comment %}
+        Та же пагинация, что и в rooms/list.html — см. комментарий там
+        про querystring (Django 5.1+) и ведущий "?".
+        {% endcomment %}
+        {% if is_paginated %}
+            <div class="pagination flex-center">
+                {% if page_obj.has_previous %}
+                    <a href="{% querystring page=page_obj.previous_page_number %}">« Назад</a>
+                {% endif %}
+
+                <span class="current-page">
+                    Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="{% querystring page=page_obj.next_page_number %}">Вперёд »</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    {% else %}
+        <p class="empty">Отели не найдены. Попробуйте изменить запрос.</p>
+    {% endif %}
+{% endblock %}

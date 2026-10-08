@@ -1,0 +1,10 @@
+asgiref==3.11.1
+Django==6.0.5
+sqlparse==0.5.5
+tzdata==2026.2
+Pillow==11.0.0
+
+# Занятие 2 — импорт/экспорт каталога в нескольких форматах (hotels/exports.py):
+openpyxl==3.1.5
+reportlab==4.4.10
+python-docx==1.2.0

@@ -1,0 +1,677 @@
+/* ============================================================
+   HotelHub — глобальные стили проекта
+   Подключается на всех страницах через templates/base.html
+   Путь: static/css/base.css
+
+   Здесь описана вся «дизайн-система» проекта: цветовые переменные,
+   типографика, сетка карточек, формы, бейджи, кнопки.
+   Приложения hotels/ и rooms/ не дублируют разметку — они лишь
+   переопределяют переменную --theme-accent и точечные детали
+   в своих style.css (см. hotels/static/hotels/css/style.css
+   и rooms/static/rooms/css/style.css).
+   ============================================================ */
+
+:root {
+    /* Базовая палитра */
+    --color-primary: #185fa5;
+    --color-primary-dark: #0c447c;
+    --color-accent: #ba7517;
+
+    --color-bg: #f5f5f4;
+    --color-surface: #ffffff;
+    --color-text: #1a1a1a;
+    --color-text-muted: #5f5e5a;
+    --color-border: #e5e3dc;
+    --color-border-soft: #f0eee8;
+
+    /* Статусные цвета (используются бейджами) */
+    --color-success-bg: #e1f5ee;
+    --color-success-text: #0f6e56;
+    --color-danger-bg: #fbeaf0;
+    --color-danger-text: #993556;
+
+    /* Акцент текущей страницы/приложения.
+       По умолчанию — основной цвет проекта.
+       Переопределяется в hotels/rooms style.css через body.theme-*. */
+    --theme-accent: var(--color-primary);
+    --theme-accent-dark: var(--color-primary-dark);
+
+    /* Геометрия */
+    --radius: 10px;
+    --radius-sm: 8px;
+    --radius-pill: 20px;
+    --container-width: 1000px;
+    --gap: 20px;
+
+    /* Эффекты */
+    --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-card-hover: 0 8px 20px rgba(0, 0, 0, 0.08);
+    --transition: 0.2s ease;
+}
+
+/* ---------- Reset & базовая типографика ---------- */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    background: var(--color-bg);
+    color: var(--color-text);
+    line-height: 1.6;
+}
+
+a {
+    color: var(--theme-accent);
+    text-decoration: none;
+    transition: opacity var(--transition);
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.container {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* ---------- Навигация (templates/includes/navbar.html) ---------- */
+
+.navbar {
+    background: var(--theme-accent);
+    color: #fff;
+    padding: 16px 0;
+}
+
+.navbar .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.navbar .logo {
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.navbar nav a {
+    color: #fff;
+    margin-left: 20px;
+    opacity: 0.8;
+    font-size: 15px;
+}
+
+.navbar nav a:hover,
+.navbar nav a.active {
+    opacity: 1;
+    text-decoration: none;
+    border-bottom: 2px solid #fff;
+    padding-bottom: 2px;
+}
+
+/* Кнопка «Выйти» в навбаре — визуально ссылка, а не форма (кнопка нужна
+   только для того, чтобы отправлять POST, как того требует дефект №5). */
+.navbar-logout-form {
+    display: inline;
+}
+
+.link-button {
+    background: none;
+    border: none;
+    padding: 0;
+    margin-left: 20px;
+    color: #fff;
+    opacity: 0.8;
+    font-size: 15px;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.link-button:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+/* ---------- Заголовок страницы (page-header, задаётся в base.html) ---------- */
+
+.page-header {
+    background: linear-gradient(180deg, var(--theme-accent) 0%, var(--theme-accent-dark) 100%);
+    color: #fff;
+    padding: 32px 0;
+    text-align: center;
+}
+
+.page-header h1 {
+    font-size: 28px;
+    font-weight: 600;
+}
+
+.page-header p {
+    opacity: 0.85;
+    font-size: 15px;
+    margin-top: 4px;
+}
+
+/* ---------- Контент страницы ---------- */
+
+.content {
+    padding-top: 32px;
+    padding-bottom: 48px;
+}
+
+/* ---------- Форма поиска (переиспользуется hotels и rooms) ---------- */
+
+.search-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 12px;
+    margin-bottom: 28px;
+}
+
+.search-form .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.search-form .input-group label {
+    font-size: 12px;
+    color: var(--color-text-muted);
+}
+
+.search-form .input-group input,
+.search-form .input-group select {
+    padding: 10px 12px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    background: var(--color-surface);
+    color: var(--color-text);
+}
+
+.search-input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    background: var(--color-surface);
+    color: var(--color-text);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--theme-accent);
+}
+
+/* ---------- Кнопки ---------- */
+
+.btn,
+.search-btn {
+    display: inline-block;
+    padding: 12px 24px;
+    background: var(--theme-accent);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background var(--transition);
+}
+
+.btn:hover,
+.search-btn:hover {
+    background: var(--theme-accent-dark);
+    text-decoration: none;
+}
+
+/* ---------- Сетка карточек (hotel-grid / room-grid) ---------- */
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--gap);
+}
+
+/* ---------- Универсальная карточка (используется _card.html обоих приложений) ---------- */
+
+.card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: var(--shadow-card);
+    transition: box-shadow var(--transition), transform var(--transition);
+}
+
+/* Изображение карточки — растягиваем до краёв поверх padding карточки
+   отрицательными отступами и обрезаем по скруглению сверху. */
+.card-image {
+    margin: -20px -20px 14px -20px;
+    height: 160px;
+    overflow: hidden;
+    border-radius: 12px 12px 0 0;
+    background: #e9e6df;
+}
+
+.card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* На странице детального просмотра изображение крупнее и без отрицательных
+   отступов карточки (используется вне .card). */
+.detail-image {
+    margin: 0 0 20px 0;
+    height: 320px;
+    border-radius: 12px;
+}
+
+.card:hover {
+    box-shadow: var(--shadow-card-hover);
+    transform: translateY(-2px);
+}
+
+.card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.card-subtitle {
+    color: var(--color-text-muted);
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.card-desc {
+    font-size: 14px;
+    color: #444441;
+    margin-bottom: 12px;
+}
+
+.card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--color-border-soft);
+    padding-top: 12px;
+}
+
+.price {
+    font-weight: 600;
+    color: var(--theme-accent);
+}
+
+.rating {
+    color: var(--color-accent);
+    font-size: 14px;
+}
+
+/* ---------- Бейджи (статус свободен/занят и т.п.) ---------- */
+
+.badge {
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: var(--radius-pill);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.badge-success {
+    background: var(--color-success-bg);
+    color: var(--color-success-text);
+}
+
+.badge-danger {
+    background: var(--color-danger-bg);
+    color: var(--color-danger-text);
+}
+
+/* ---------- Пустое состояние ---------- */
+
+.empty {
+    text-align: center;
+    color: var(--color-text-muted);
+    padding: 48px 0;
+}
+
+/* ---------- Подвал ---------- */
+
+.footer {
+    text-align: center;
+    color: var(--color-text-muted);
+    padding: 30px 0;
+    font-size: 14px;
+}
+
+/* ---------- Адаптивность ---------- */
+
+@media (max-width: 600px) {
+    .navbar .container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .navbar nav a {
+        margin-left: 0;
+        margin-right: 16px;
+    }
+
+    .search-form {
+        flex-direction: column;
+    }
+
+    .page-header h1 {
+        font-size: 22px;
+    }
+}
+
+/* ============================================================
+   Компоненты, добавленные вместе с приложениями
+   core (главная), users (профиль/формы), bookings (брони)
+   ============================================================ */
+
+/* ---------- Сообщения Django (messages framework) ---------- */
+
+.messages {
+    list-style: none;
+    margin-bottom: 24px;
+}
+
+.message {
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 10px;
+    font-size: 14px;
+    border-left: 4px solid var(--theme-accent);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-card);
+}
+
+.message-success { border-left-color: var(--color-success-text); }
+.message-error   { border-left-color: var(--color-danger-text); }
+.message-info    { border-left-color: var(--color-primary); }
+
+/* ---------- Кнопки: контурный и маленький варианты ---------- */
+
+.btn-outline {
+    background: transparent;
+    color: var(--theme-accent);
+    border: 1px solid var(--theme-accent);
+}
+
+.btn-outline:hover {
+    background: var(--theme-accent);
+    color: #fff;
+}
+
+.btn-sm {
+    padding: 6px 14px;
+    font-size: 13px;
+}
+
+/* ---------- Формы (вход, регистрация, бронирование) ---------- */
+
+.form-card {
+    max-width: 460px;
+    margin: 0 auto;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 28px;
+    box-shadow: var(--shadow-card);
+}
+
+.form-row {
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-row label {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: var(--color-text);
+}
+
+.form-row input {
+    padding: 11px 14px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    background: var(--color-surface);
+    color: var(--color-text);
+    width: 100%;
+}
+
+.form-row input:focus {
+    outline: none;
+    border-color: var(--theme-accent);
+}
+
+.form-hint  { color: var(--color-text-muted); font-size: 12px; margin-top: 4px; }
+.form-error { color: var(--color-danger-text); font-size: 13px; margin-top: 4px; }
+
+.form-alt {
+    margin-top: 18px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--color-text-muted);
+}
+
+/* ---------- Главная: hero, статистика, секции ---------- */
+
+.hero {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    color: #fff;
+    padding: 64px 0;
+    text-align: center;
+}
+
+.hero h1 { font-size: 38px; font-weight: 700; margin-bottom: 12px; }
+.hero p  { opacity: 0.9; font-size: 17px; max-width: 560px; margin: 0 auto 24px; }
+.hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.hero-actions .btn-outline { color: #fff; border-color: #fff; }
+.hero-actions .btn-outline:hover { background: #fff; color: var(--color-primary); }
+
+.stats {
+    display: flex;
+    gap: var(--gap);
+    justify-content: center;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+}
+
+.stat {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 20px 32px;
+    text-align: center;
+    min-width: 150px;
+}
+
+.stat b { display: block; font-size: 30px; color: var(--theme-accent); }
+.stat span { color: var(--color-text-muted); font-size: 14px; }
+
+.home-section { margin-bottom: 44px; }
+
+.section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 18px;
+}
+
+.section-head h2 { font-size: 22px; }
+.section-head a { font-size: 14px; }
+
+/* Кликабельные заголовки карточек */
+ .card-title a:hover { color: var(--theme-accent); text-decoration: none; }
+
+/* ---------- Страница-деталь (отель/номер) ---------- */
+
+.detail {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 28px;
+    box-shadow: var(--shadow-card);
+}
+
+.detail-meta { display: flex; gap: 20px; align-items: center; margin: 12px 0 18px; }
+.detail-desc { color: var(--color-text-muted); margin-bottom: 20px; }
+.detail-heading { font-size: 20px; margin: 8px 0 16px; }
+.back-link { margin-top: 24px; }
+
+/* ---------- Профиль пользователя ---------- */
+
+.profile {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: var(--gap);
+}
+
+.profile-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 24px;
+    text-align: center;
+    box-shadow: var(--shadow-card);
+    height: fit-content;
+}
+
+.avatar {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto 14px;
+    display: block;
+}
+
+.avatar-placeholder {
+    background: var(--theme-accent);
+    color: #fff;
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 96px;
+}
+
+.profile-name { font-size: 20px; margin-bottom: 16px; }
+
+.profile-fields { list-style: none; text-align: left; margin-bottom: 20px; }
+.profile-fields li {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--color-border-soft);
+    font-size: 14px;
+}
+.profile-fields span { color: var(--color-text-muted); }
+
+.profile-bookings h3 { font-size: 20px; margin-bottom: 16px; }
+
+/* ---------- Бронирования ---------- */
+
+.booking-list { display: flex; flex-direction: column; gap: 12px; }
+
+.booking-row {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-left: 4px solid var(--theme-accent);
+    border-radius: var(--radius-sm);
+    padding: 16px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.booking-row.status-confirmed { border-left-color: var(--color-success-text); }
+.booking-row.status-cancelled { border-left-color: var(--color-danger-text); opacity: 0.65; }
+
+.booking-dates { color: var(--color-text-muted); font-size: 13px; margin-top: 4px; }
+.booking-side { display: flex; align-items: center; gap: 12px; }
+
+.badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: var(--radius-pill);
+    font-size: 12px;
+    background: var(--color-border-soft);
+    color: var(--color-text-muted);
+}
+
+.booking-summary {
+    background: var(--color-border-soft);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+/* ---------- Адаптивность для новых блоков ---------- */
+
+@media (max-width: 700px) {
+    .profile { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 28px; }
+}
+
+/* Панель кнопок экспорта/импорта над списком отелей (Занятие 2). */
+.hotels-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 4px 0 20px 0;
+}
+
+/* ---------- Пагинация (Занятие 1: списки отелей/номеров) ---------- */
+
+.flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pagination {
+    gap: 20px;
+    margin-top: 32px;
+    font-size: 14px;
+}
+
+.pagination a {
+    color: var(--theme-accent);
+    font-weight: 500;
+}
+
+.pagination a:hover {
+    text-decoration: underline;
+}
+
+.current-page {
+    color: var(--color-text-muted);
+}

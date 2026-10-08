@@ -1,0 +1,41 @@
+{% load humanize %}
+{% load static %}
+{# Карточка номера. Заголовок ведёт на страницу номера с кнопкой брони. #}
+<article class="card room-card">
+    <div class="card-image">
+        {% if room.image %}
+            <img src="{{ room.image.url }}" alt="Номер {{ room.number }}" loading="lazy" onerror="this.onerror=null;this.src='{% static 'img/no-photo.svg' %}';">
+        {% else %}
+            <img src="{% static 'img/no-photo.svg' %}" alt="Фото пока нет" loading="lazy">
+        {% endif %}
+    </div>
+
+    <div class="card-head">
+        <h2 class="card-title">
+            <a href="{% url 'rooms:room_detail' room.id %}">Номер {{ room.number }}</a>
+        </h2>
+        {% comment %}
+        Бейдж считается не по статичному is_available («в продаже»), а по
+        occupied_today — аннотации из RoomQuerySet.with_today_status(),
+        которая смотрит на реальные брони на сегодня (аудит, дефект №4:
+        раньше номер с бронью на завтра мог весь месяц показываться
+        «Свободен», потому что бейдж вообще не смотрел на брони).
+        {% endcomment %}
+        {% if room.occupied_today %}
+            <span class="badge badge-danger">Занят сегодня</span>
+        {% else %}
+            <span class="badge badge-success">Свободен</span>
+        {% endif %}
+    </div>
+
+    <p class="card-subtitle">{{ room.hotel.name }}, {{ room.hotel.city }}</p>
+    <p class="card-subtitle">{{ room.get_room_type_display }} · до {{ room.capacity }} гостей</p>
+
+    {% if room.description %}
+        <p class="card-desc">{{ room.description }}</p>
+    {% endif %}
+
+    <div class="card-meta">
+        <span class="price">{{ room.price_per_night|intcomma }} ₸ / ночь</span>
+    </div>
+</article>

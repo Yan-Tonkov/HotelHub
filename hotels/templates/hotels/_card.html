@@ -1,0 +1,37 @@
+{% load humanize %}
+{% load static %}
+{# Карточка отеля. Кликабельна — ведёт на страницу отеля с его номерами. #}
+<article class="card hotel-card">
+    <div class="card-image">
+        {% if hotel.cover %}
+            <img src="{{ hotel.cover.url }}" alt="{{ hotel.name }}" loading="lazy" onerror="this.onerror=null;this.src='{% static 'img/no-photo.svg' %}';">
+        {% else %}
+            {# Пока обложка не загружена — показываем заглушку, а не битую картинку. #}
+            <img src="{% static 'img/no-photo.svg' %}" alt="Фото пока нет" loading="lazy">
+        {% endif %}
+    </div>
+
+    <h2 class="card-title">
+        <a href="{% url 'hotels:hotel_detail' hotel.id %}">{{ hotel.name }}</a>
+    </h2>
+    <p class="card-subtitle">{{ hotel.city }}, {{ hotel.address }}</p>
+
+    {% if hotel.description %}
+        <p class="card-desc">{{ hotel.description }}</p>
+    {% endif %}
+
+    <div class="card-meta">
+        {% comment %}
+        min_price — агрегат по реальным номерам отеля (HotelQuerySet.with_stats(),
+        аудит, дефект №14): честная цена «от», а не отдельно хранимое
+        Hotel.price, которое может разойтись с ценами номеров. Если у
+        отеля ещё нет номеров, min_price = None — показываем hotel.price.
+        {% endcomment %}
+        {% if hotel.min_price %}
+            <span class="price">от {{ hotel.min_price|intcomma }} ₸ / ночь</span>
+        {% else %}
+            <span class="price">{{ hotel.price|intcomma }} ₸ / ночь</span>
+        {% endif %}
+        <span class="rating">★ {{ hotel.rating|floatformat:1 }}</span>
+    </div>
+</article>

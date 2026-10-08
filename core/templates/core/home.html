@@ -1,0 +1,60 @@
+{% extends "base.html" %}   {# наследуем общий каркас сайта: шапку, футер, подключение стилей #}
+{% load humanize %}         {# подключаем фильтры humanize (например intcomma — разряды в числах) #}
+
+{% block title %}HotelHub — поиск и бронирование отелей{% endblock %}   {# заголовок вкладки браузера (тег title) #}
+
+{# Переопределяем блок page_header из base.html: вместо обычной шапки — «геройный» баннер #}
+{% block page_header %}
+<section class="hero">                          {# крупный приветственный блок в начале страницы #}
+    <div class="container">                     {# контейнер ограничивает ширину и центрирует содержимое #}
+        <h1>Найдите идеальный отель</h1>        {# главный заголовок-призыв #}
+        <p>Тысячи номеров в отелях по всему Казахстану — поиск, сравнение и бронирование в пару кликов.</p>   {# подзаголовок #}
+        <div class="hero-actions">              {# блок с кнопками-ссылками #}
+            <a href="{% url 'hotels:hotel_list' %}" class="btn">Смотреть отели</a>            {# url строит адрес по имени маршрута hotels:hotel_list #}
+            <a href="{% url 'rooms:room_list' %}" class="btn btn-outline">Выбрать номер</a>   {# ссылка на список номеров #}
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{# Основное содержимое страницы попадает в блок content каркаса base.html #}
+{% block content %}
+    {# Блок статистики: числа приходят из словаря stats, который сформировал core/views.py #}
+    <div class="stats">
+        <div class="stat"><b>{{ stats.hotels }}</b><span>отелей</span></div>            {# количество активных отелей #}
+        <div class="stat"><b>{{ stats.rooms }}</b><span>свободных номеров</span></div>  {# количество свободных номеров #}
+        <div class="stat"><b>{{ stats.cities }}</b><span>городов</span></div>           {# количество уникальных городов #}
+    </div>
+
+    <section class="home-section">              {# секция «Популярные отели» #}
+        <div class="section-head">              {# «шапка» секции: заголовок + ссылка «все» #}
+            <h2>Популярные отели</h2>
+            <a href="{% url 'hotels:hotel_list' %}">Все отели →</a>   {# ссылка на полный список отелей #}
+        </div>
+        {% if top_hotels %}                     {# если список top_hotels не пустой — показываем карточки #}
+            <div class="card-grid">             {# сетка карточек (CSS grid) #}
+                {% for hotel in top_hotels %}   {# перебираем каждый отель из top_hotels #}
+                    {% include "hotels/_card.html" with hotel=hotel %}   {# вставляем готовую карточку отеля, передавая переменную hotel #}
+                {% endfor %}                    {# конец цикла по отелям #}
+            </div>
+        {% else %}                              {# иначе (отелей нет) — показываем заглушку #}
+            <p class="empty">Отели пока не добавлены.</p>
+        {% endif %}
+    </section>
+
+    <section class="home-section">              {# секция «Свободные номера» #}
+        <div class="section-head">
+            <h2>Свободные номера</h2>
+            <a href="{% url 'rooms:room_list' %}">Все номера →</a>   {# ссылка на полный список номеров #}
+        </div>
+        {% if featured_rooms %}                 {# если есть номера для витрины #}
+            <div class="card-grid">
+                {% for room in featured_rooms %}          {# перебираем номера #}
+                    {% include "rooms/_card.html" with room=room %}   {# вставляем карточку номера #}
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="empty">Номера пока не добавлены.</p>
+        {% endif %}
+    </section>
+{% endblock %}

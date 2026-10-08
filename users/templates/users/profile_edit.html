@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Редактирование профиля — HotelHub{% endblock %}
+{% block page_title %}Редактирование профиля{% endblock %}
+{% block page_subtitle %}Email, телефон и фото профиля{% endblock %}
+
+{% block content %}
+<div class="form-card">
+    {# enctype обязателен: без него файл (аватар) не попадёт в request.FILES #}
+    <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+
+        {% if request.user.avatar %}
+            <img src="{{ request.user.avatar.url }}" alt="Текущий аватар" class="avatar" style="margin-bottom:16px;">
+        {% endif %}
+
+        {% for field in form %}
+            <div class="form-row">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}<small>{{ field.help_text }}</small>{% endif %}
+                {% for error in field.errors %}
+                    <small class="form-error">{{ error }}</small>
+                {% endfor %}
+            </div>
+        {% endfor %}
+
+        <button type="submit" class="btn">Сохранить</button>
+        <a href="{% url 'users:profile' %}" class="btn btn-outline">Отмена</a>
+    </form>
+</div>
+{% endblock %}

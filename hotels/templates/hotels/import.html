@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Импорт отелей — HotelHub{% endblock %}
+{% block page_title %}Импорт отелей из CSV или Excel{% endblock %}
+{% block page_subtitle %}Только для персонала{% endblock %}
+
+{% block content %}
+<div class="form-card">
+    <p class="card-desc">
+        Загрузите файл <strong>.csv</strong> или <strong>.xlsx</strong> с колонками
+        <code>name, city, address, price, rating</code> — первая строка (заголовок)
+        пропускается. Если хотя бы одна строка не пройдёт проверку, не будет создан
+        ни один отель (импорт выполняется одной транзакцией).
+    </p>
+    <p class="card-desc">
+        PDF и Word — форматы только для <a href="{% url 'hotels:hotel_list' %}">экспорта</a>
+        (документы для чтения и печати); загрузить каталог обратно из них нельзя.
+    </p>
+
+    <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="form-row">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}<small>{{ field.help_text }}</small>{% endif %}
+                {% for error in field.errors %}
+                    <small class="form-error">{{ error }}</small>
+                {% endfor %}
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn">Импортировать</button>
+        <a href="{% url 'hotels:hotel_list' %}" class="btn btn-outline">Отмена</a>
+    </form>
+
+    <p class="form-alt" style="margin-top:16px;">
+        Пример строки файла:<br>
+        <code>Grand Astana,Астана,пр. Кабанбай батыра 12,45000,4.7</code>
+    </p>
+</div>
+{% endblock %}

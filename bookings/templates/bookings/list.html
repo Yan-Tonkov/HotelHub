@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block title %}Мои бронирования — HotelHub{% endblock %}
+{% block page_title %}Мои бронирования{% endblock %}
+{% block page_subtitle %}Список ваших броней в HotelHub{% endblock %}
+
+{% block content %}
+{% if bookings %}
+    <div class="booking-list">
+        {% for booking in bookings %}
+            <article class="booking-row status-{{ booking.status }}">
+                <div class="booking-main">
+                    <b>{{ booking.room.hotel.name }}</b> · номер {{ booking.room.number }}
+                    <span class="badge">{{ booking.get_status_display }}</span>
+                    <div class="booking-dates">
+                        {{ booking.check_in|date:"d.m.Y" }} — {{ booking.check_out|date:"d.m.Y" }}
+                        · {{ booking.nights }} ноч. · {{ booking.guests }} гост.
+                    </div>
+                </div>
+                <div class="booking-side">
+                    <span class="price">{{ booking.total_price|intcomma }} ₸</span>
+                    {% if booking.status != 'cancelled' %}
+                        <form method="post" action="{% url 'bookings:cancel' booking.pk %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline btn-sm">Отменить</button>
+                        </form>
+                    {% endif %}
+                </div>
+            </article>
+        {% endfor %}
+    </div>
+{% else %}
+    <p class="empty">У вас пока нет бронирований.
+        <a href="{% url 'rooms:room_list' %}">Выбрать номер</a>.</p>
+{% endif %}
+{% endblock %}
